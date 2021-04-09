@@ -22,7 +22,6 @@
 
 
 
-
 <body id="top" role="document" class="module">
 <nav role="navigation">
   <div id="project-navigation">
@@ -104,7 +103,8 @@
 
   <section class="description">
     
-<p>Collection of utilities to manipulate .arbac files (defining an ARBAC role reachability problem) to parse and eventually solve the problem</p>
+<p>Collection of utilities to manipulate .arbac files (defining an ARBAC role
+reachability problem) to parse and eventually solve the problem</p>
 
   </section>
 
@@ -159,10 +159,13 @@
 
         <div class="method-description">
           
-          <p>Compute the backward slicing algorithm within a given policy in order to make the latter smaller and easier to analyze</p>
+          <p>Compute the backward slicing algorithm within a given policy in order to
+make the latter smaller and easier to analyze</p>
 <dl class="rdoc-list note-list"><dt>original_policy
 <dd>
-<p>The policy object, expressed as an hash  structured in the same way of the return value of <a href="ArbacModule.html#method-i-parse_arbac_file"><code>parse_arbac_file</code></a>(string)</p>
+<p>The policy object, expressed as an hash  structured in the same way of the
+return value of <a
+href="ArbacModule.html#method-i-parse_arbac_file">#parse_arbac_file</a>(string)</p>
 </dd></dl>
 
 <h3 id="method-i-backward_slicing-label-Returns">Returns<span><a href="#method-i-backward_slicing-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
@@ -179,7 +182,7 @@
 
           
           <div class="method-source-code" id="backward_slicing-source">
-            <pre><span class="ruby-comment"># File src/modules/arbac_module.rb, line 97</span>
+            <pre><span class="ruby-comment"># File src/modules/arbac_module.rb, line 96</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">backward_slicing</span>(<span class="ruby-identifier">original_policy</span>)
   <span class="ruby-identifier">policy</span> = <span class="ruby-identifier">original_policy</span>.<span class="ruby-identifier">dup</span>
   <span class="ruby-identifier">s</span> = <span class="ruby-constant">Set</span>.<span class="ruby-identifier">new</span> [<span class="ruby-identifier">policy</span>[<span class="ruby-value">:Goal</span>]]
@@ -195,7 +198,6 @@
   <span class="ruby-identifier">unused_roles</span> = <span class="ruby-identifier">original_policy</span>[<span class="ruby-value">:Roles</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">s</span>
   <span class="ruby-identifier">policy</span>[<span class="ruby-value">:CA</span>] = <span class="ruby-identifier">policy</span>[<span class="ruby-value">:CA</span>].<span class="ruby-identifier">select</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">ca</span><span class="ruby-operator">|</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">unused_roles</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">ca</span>[<span class="ruby-value">2</span>])) }.<span class="ruby-identifier">to_set</span>
   <span class="ruby-identifier">policy</span>[<span class="ruby-value">:CR</span>] = <span class="ruby-identifier">policy</span>[<span class="ruby-value">:CR</span>].<span class="ruby-identifier">select</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">cr</span><span class="ruby-operator">|</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">unused_roles</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">cr</span>[<span class="ruby-value">1</span>])) }.<span class="ruby-identifier">to_set</span>
-  <span class="ruby-identifier">policy</span>[<span class="ruby-value">:UA</span>] = <span class="ruby-identifier">policy</span>[<span class="ruby-value">:UA</span>].<span class="ruby-identifier">select</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">ua</span><span class="ruby-operator">|</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">unused_roles</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">ua</span>[<span class="ruby-value">1</span>]))}
   <span class="ruby-identifier">policy</span>[<span class="ruby-value">:Roles</span>] <span class="ruby-operator">-=</span> <span class="ruby-identifier">unused_roles</span>
   <span class="ruby-identifier">policy</span>
 <span class="ruby-keyword">end</span></pre>
@@ -222,10 +224,13 @@
 
         <div class="method-description">
           
-          <p>Compute the forward slicing algorithm within a given policy in order to make the latter smaller and easier to analyze</p>
+          <p>Compute the forward slicing algorithm within a given policy in order to
+make the latter smaller and easier to analyze</p>
 <dl class="rdoc-list note-list"><dt>original_policy
 <dd>
-<p>The policy object, expressed as an hash structured in the same way of the return value of <a href="ArbacModule.html#method-i-parse_arbac_file"><code>parse_arbac_file</code></a>(string)</p>
+<p>The policy object, expressed as an hash structured in the same way of the
+return value of <a
+href="ArbacModule.html#method-i-parse_arbac_file">#parse_arbac_file</a>(string)</p>
 </dd></dl>
 
 <h3 id="method-i-forward_slicing-label-Returns">Returns<span><a href="#method-i-forward_slicing-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
@@ -263,7 +268,6 @@
     <span class="ruby-identifier">ca</span>[<span class="ruby-value">1</span>][<span class="ruby-value">1</span>] = <span class="ruby-identifier">ca</span>[<span class="ruby-value">1</span>][<span class="ruby-value">1</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">unused_roles</span>
     <span class="ruby-identifier">ca</span>
   <span class="ruby-keyword">end</span>.<span class="ruby-identifier">to_set</span>
-  <span class="ruby-identifier">policy</span>[<span class="ruby-value">:UA</span>] = <span class="ruby-identifier">policy</span>[<span class="ruby-value">:UA</span>].<span class="ruby-identifier">select</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">ua</span><span class="ruby-operator">|</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">unused_roles</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">ua</span>[<span class="ruby-value">1</span>]))}
   <span class="ruby-identifier">policy</span>[<span class="ruby-value">:Roles</span>] <span class="ruby-operator">-=</span> <span class="ruby-identifier">unused_roles</span>
   <span class="ruby-identifier">policy</span>
 <span class="ruby-keyword">end</span></pre>
@@ -395,29 +399,36 @@
 
         <div class="method-description">
           
-          <p>Given a current state, a target user and an assignment rule, computes the rule application result state</p>
+          <p>Given a current state, a target user and an assignment rule, computes the
+rule application result state</p>
 <dl class="rdoc-list note-list"><dt>state
 <dd>
-<p>The initial state in which the transition should be applied, represented as a set of arrays [&lt;user&gt;,&lt;role&gt;]</p>
+<p>The initial state in which the transition should be applied, represented as
+a set of arrays [&lt;user&gt;,&lt;role&gt;]</p>
 </dd><dt>target
 <dd>
 <p>The string representation of the user to whom assign the new role</p>
 </dd><dt>assignment_rule
 <dd>
-<p>The assignment rule, espressed as [agent_role,[ [ positive_precondition,… ], [ negative_precondition,… ] ],new_role]</p>
+<p>The assignment rule, espressed as [agent_role,[ [ positive_precondition,…
+], [ negative_precondition,… ] ],new_role]</p>
 </dd></dl>
 
 <h3 id="method-i-apply_role_assignment-label-Returns">Returns<span><a href="#method-i-apply_role_assignment-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Returns the state, represented in the same way of the state parameter, resulted from the application of the assignment.</p>
+<p>Returns the state, represented in the same way of the state parameter,
+resulted from the application of the assignment.</p>
 
-<p><strong>Note</strong>: if the rule cannot be applied because either there are no users in the initial state with the agent role, the target is not present in the initial state or the preconditions on the target are not satisfied, then the method returns the initial state itself</p>
+<p><strong>Note</strong>: if the rule cannot be applied because either there
+are no users in the initial state with the agent role, the target is not
+present in the initial state or the preconditions on the target are not
+satisfied, then the method returns the initial state itself</p>
           
           
 
           
           <div class="method-source-code" id="apply_role_assignment-source">
-            <pre><span class="ruby-comment"># File src/modules/arbac_module.rb, line 127</span>
+            <pre><span class="ruby-comment"># File src/modules/arbac_module.rb, line 125</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">apply_role_assignment</span>(<span class="ruby-identifier">state</span>, <span class="ruby-identifier">target</span>, <span class="ruby-identifier">assignment_rule</span>)
   <span class="ruby-identifier">agent</span> = <span class="ruby-identifier">assignment_rule</span>.<span class="ruby-identifier">first</span>
   <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">state</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:first</span>).<span class="ruby-identifier">include?</span> <span class="ruby-identifier">target</span>)
@@ -468,29 +479,36 @@
 
         <div class="method-description">
           
-          <p>Given a current state, a target user and an revocation rule, computes the rule application result state</p>
+          <p>Given a current state, a target user and an revocation rule, computes the
+rule application result state</p>
 <dl class="rdoc-list note-list"><dt>state
 <dd>
-<p>The initial state in which the transition should be applied, represented as a set of arrays [&lt;user&gt;,&lt;role&gt;]</p>
+<p>The initial state in which the transition should be applied, represented as
+a set of arrays [&lt;user&gt;,&lt;role&gt;]</p>
 </dd><dt>target
 <dd>
 <p>The string representation of the user to whom revoke the role</p>
 </dd><dt>assignment_rule
 <dd>
-<p>The revocation rule, espressed as [&lt;agent_role&gt;,&lt;role_to_revoke&gt;]</p>
+<p>The revocation rule, espressed as
+[&lt;agent_role&gt;,&lt;role_to_revoke&gt;]</p>
 </dd></dl>
 
 <h3 id="method-i-apply_role_revocation-label-Returns">Returns<span><a href="#method-i-apply_role_revocation-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Returns the state, expressed as the state parameter, resulted from the application of the revocation.</p>
+<p>Returns the state, expressed as the state parameter, resulted from the
+application of the revocation.</p>
 
-<p><strong>Note</strong>: if the rule cannot be applied because either there are no users in the initial state with the agent role or the association &lt;target user,role to be revoked&gt; is not present in the initial state, then the method returns the initial state itself</p>
+<p><strong>Note</strong>: if the rule cannot be applied because either there
+are no users in the initial state with the agent role or the association
+&lt;target user,role to be revoked&gt; is not present in the initial state,
+then the method returns the initial state itself</p>
           
           
 
           
           <div class="method-source-code" id="apply_role_revocation-source">
-            <pre><span class="ruby-comment"># File src/modules/arbac_module.rb, line 165</span>
+            <pre><span class="ruby-comment"># File src/modules/arbac_module.rb, line 163</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">apply_role_revocation</span>(<span class="ruby-identifier">state</span>, <span class="ruby-identifier">target</span>, <span class="ruby-identifier">revocation_rule</span>)
   <span class="ruby-identifier">agent</span> = <span class="ruby-identifier">revocation_rule</span>.<span class="ruby-identifier">first</span>
   <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">state</span>.<span class="ruby-identifier">include?</span> [<span class="ruby-identifier">target</span>,<span class="ruby-identifier">revocation_rule</span>.<span class="ruby-identifier">last</span>])
@@ -518,13 +536,12 @@
     </section>
   
   </section>
-
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.2.1.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.1.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

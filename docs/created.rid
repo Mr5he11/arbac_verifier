@@ -1,4 +1,5 @@
-Fri, 09 Apr 2021 09:16:36 +0200
-./src/classes/arbac_instance.rb	Fri, 09 Apr 2021 09:16:16 +0200
-./src/main.rb	Thu, 08 Apr 2021 23:27:12 +0200
-./src/modules/arbac_module.rb	Fri, 09 Apr 2021 09:16:16 +0200
+Fri, 09 Apr 2021 22:05:53 +0200
+src/main.rb	Fri, 09 Apr 2021 22:05:14 +0200
+src/classes/arbac_instance.rb	Fri, 09 Apr 2021 22:05:14 +0200
+src/exceptions/computation_timed_out_exception.rb	Fri, 09 Apr 2021 22:05:14 +0200
+src/modules/arbac_module.rb	Fri, 09 Apr 2021 22:05:14 +0200
