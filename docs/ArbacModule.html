@@ -67,6 +67,8 @@
     
       <li><a href="#Public">Public</a></li>
     
+      <li><a href="#Internal">Internal</a></li>
+    
   </ul>
 </div>
 
@@ -78,6 +80,10 @@
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-i-apply_role_assignment">#apply_role_assignment</a>
+    
+    <li ><a href="#method-i-apply_role_revocation">#apply_role_revocation</a>
     
     <li ><a href="#method-i-backward_slicing">#backward_slicing</a>
     
@@ -336,6 +342,168 @@
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">result</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+
+  <section id="Internal" class="documentation-section">
+    
+    <header class="documentation-section-title">
+      <h2>
+        Internal
+      </h2>
+      <span class="section-click-top">
+        <a href="#top">&uarr; top</a>
+      </span>
+    </header>
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-instance-Internal-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-apply_role_assignment" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">apply_role_assignment</span><span
+            class="method-args">(state, target, assignment_rule)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Given a current state, a target user and an assignment rule, computes the rule application result state</p>
+<dl class="rdoc-list note-list"><dt>state
+<dd>
+<p>The initial state in which the transition should be applied, represented as a set of arrays [&lt;user&gt;,&lt;role&gt;]</p>
+</dd><dt>target
+<dd>
+<p>The string representation of the user to whom assign the new role</p>
+</dd><dt>assignment_rule
+<dd>
+<p>The assignment rule, espressed as [agent_role,[ [ positive_precondition,… ], [ negative_precondition,… ] ],new_role]</p>
+</dd></dl>
+
+<h3 id="method-i-apply_role_assignment-label-Returns">Returns<span><a href="#method-i-apply_role_assignment-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns the state, represented in the same way of the state parameter, resulted from the application of the assignment.</p>
+
+<p><strong>Note</strong>: if the rule cannot be applied because either there are no users in the initial state with the agent role, the target is not present in the initial state or the preconditions on the target are not satisfied, then the method returns the initial state itself</p>
+          
+          
+
+          
+          <div class="method-source-code" id="apply_role_assignment-source">
+            <pre><span class="ruby-comment"># File src/modules/arbac_module.rb, line 127</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">apply_role_assignment</span>(<span class="ruby-identifier">state</span>, <span class="ruby-identifier">target</span>, <span class="ruby-identifier">assignment_rule</span>)
+  <span class="ruby-identifier">agent</span> = <span class="ruby-identifier">assignment_rule</span>.<span class="ruby-identifier">first</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">state</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:first</span>).<span class="ruby-identifier">include?</span> <span class="ruby-identifier">target</span>)
+    <span class="ruby-comment"># The target user is not in the current state</span>
+    <span class="ruby-identifier">state</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">state</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:last</span>).<span class="ruby-identifier">include?</span> <span class="ruby-identifier">agent</span>)
+    <span class="ruby-comment"># There is no user in the current state with the agent role</span>
+    <span class="ruby-identifier">state</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">positive_preconditions_hold</span> = <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">negative_preconditions_hold</span> = <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">assignment_rule</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">first</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">role</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">positive_preconditions_hold</span> <span class="ruby-operator">&amp;&amp;=</span> (<span class="ruby-identifier">state</span>.<span class="ruby-identifier">include?</span> [<span class="ruby-identifier">target</span>,<span class="ruby-identifier">role</span>])
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">assignment_rule</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">last</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">role</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">negative_preconditions_hold</span> <span class="ruby-operator">&amp;&amp;=</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">state</span>.<span class="ruby-identifier">include?</span> [<span class="ruby-identifier">target</span>,<span class="ruby-identifier">role</span>])
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">positive_preconditions_hold</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">negative_preconditions_hold</span>
+      <span class="ruby-identifier">new_state</span> = <span class="ruby-identifier">state</span>.<span class="ruby-identifier">dup</span>
+      <span class="ruby-identifier">new_state</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-identifier">target</span>,<span class="ruby-identifier">assignment_rule</span>.<span class="ruby-identifier">last</span>]
+      <span class="ruby-identifier">new_state</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-comment"># preconditions don&#39;t hold</span>
+      <span class="ruby-identifier">state</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-apply_role_revocation" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">apply_role_revocation</span><span
+            class="method-args">(state, target, revocation_rule)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Given a current state, a target user and an revocation rule, computes the rule application result state</p>
+<dl class="rdoc-list note-list"><dt>state
+<dd>
+<p>The initial state in which the transition should be applied, represented as a set of arrays [&lt;user&gt;,&lt;role&gt;]</p>
+</dd><dt>target
+<dd>
+<p>The string representation of the user to whom revoke the role</p>
+</dd><dt>assignment_rule
+<dd>
+<p>The revocation rule, espressed as [&lt;agent_role&gt;,&lt;role_to_revoke&gt;]</p>
+</dd></dl>
+
+<h3 id="method-i-apply_role_revocation-label-Returns">Returns<span><a href="#method-i-apply_role_revocation-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns the state, expressed as the state parameter, resulted from the application of the revocation.</p>
+
+<p><strong>Note</strong>: if the rule cannot be applied because either there are no users in the initial state with the agent role or the association &lt;target user,role to be revoked&gt; is not present in the initial state, then the method returns the initial state itself</p>
+          
+          
+
+          
+          <div class="method-source-code" id="apply_role_revocation-source">
+            <pre><span class="ruby-comment"># File src/modules/arbac_module.rb, line 165</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">apply_role_revocation</span>(<span class="ruby-identifier">state</span>, <span class="ruby-identifier">target</span>, <span class="ruby-identifier">revocation_rule</span>)
+  <span class="ruby-identifier">agent</span> = <span class="ruby-identifier">revocation_rule</span>.<span class="ruby-identifier">first</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">state</span>.<span class="ruby-identifier">include?</span> [<span class="ruby-identifier">target</span>,<span class="ruby-identifier">revocation_rule</span>.<span class="ruby-identifier">last</span>])
+    <span class="ruby-comment"># The association &lt;target user,role to be revoked&gt; is not in the current state</span>
+    <span class="ruby-identifier">state</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">state</span>.<span class="ruby-identifier">map</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:last</span>).<span class="ruby-identifier">include?</span> <span class="ruby-identifier">agent</span>)
+    <span class="ruby-comment"># There is no user in the current state with the agent role</span>
+    <span class="ruby-identifier">state</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">new_state</span> = <span class="ruby-identifier">state</span>.<span class="ruby-identifier">dup</span>
+    <span class="ruby-identifier">new_state</span>.<span class="ruby-identifier">delete</span> [<span class="ruby-identifier">target</span>,<span class="ruby-identifier">revocation_rule</span>.<span class="ruby-identifier">last</span>]
+    <span class="ruby-identifier">new_state</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
